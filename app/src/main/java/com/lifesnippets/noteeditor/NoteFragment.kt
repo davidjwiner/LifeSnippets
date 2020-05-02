@@ -1,4 +1,4 @@
-package com.lifesnippets.ui.main
+package com.lifesnippets.noteeditor
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.lifesnippets.ui.main
+package com.lifesnippets.ui.home
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

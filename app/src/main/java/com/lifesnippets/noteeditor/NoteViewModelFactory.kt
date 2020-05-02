@@ -1,4 +1,4 @@
-package com.lifesnippets.ui.main
+package com.lifesnippets.noteeditor
 ////
 ////import androidx.lifecycle.ViewModel
 ////import androidx.lifecycle.ViewModelProvider

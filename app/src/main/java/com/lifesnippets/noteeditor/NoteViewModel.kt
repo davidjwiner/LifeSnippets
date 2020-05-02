@@ -1,4 +1,4 @@
-package com.lifesnippets.ui.main
+package com.lifesnippets.noteeditor
 
 import android.app.Application
 import android.util.Log
