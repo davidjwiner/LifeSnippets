@@ -3,8 +3,6 @@ package com.lifesnippets.ui.home
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.lifesnippets.data.NoteDao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
 class MainViewModel(
@@ -15,7 +13,6 @@ class MainViewModel(
 
     private var viewModelJob = Job()
 
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     val notes = database.getAllNotes()
 
     /**

@@ -2,9 +2,9 @@ package com.lifesnippets.noteeditor
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifesnippets.data.Note
 import com.lifesnippets.data.NoteDatabase
@@ -13,7 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NoteViewModel (application: Application) : AndroidViewModel(application) {
+//class NoteViewModel (application: Application, private val state: SavedStateHandle) : AndroidViewModel(application) {
+class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
     private val repository: NoteRepository
 
     private val _note = MutableLiveData<Note>()
@@ -27,7 +28,16 @@ class NoteViewModel (application: Application) : AndroidViewModel(application) {
     init {
         val noteDao = NoteDatabase.getDatabase(application).noteDao()
         repository = NoteRepository(noteDao)
-        _note.value = Note(noteText = "") // key is auto-generated
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (noteId > 0) {
+                    _note.postValue(repository.get(noteId))
+                } else {
+                    _note.postValue(Note(noteText = "")) // key is auto-generated
+                }
+            }
+        }
     }
 
     fun onSubmit() {

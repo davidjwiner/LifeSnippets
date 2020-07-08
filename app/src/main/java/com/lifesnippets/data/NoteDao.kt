@@ -12,7 +12,7 @@ interface NoteDao {
     fun insert(note: Note)
 
     @Query("SELECT * FROM note_table WHERE noteId = :key")
-    fun get(key: Long): LiveData<Note>
+    suspend fun get(key: Long): Note
 
     @Query("SELECT * FROM note_table ORDER BY noteId DESC")
     fun getAllNotes(): LiveData<List<Note>>

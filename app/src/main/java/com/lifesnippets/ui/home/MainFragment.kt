@@ -1,7 +1,6 @@
 package com.lifesnippets.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +39,6 @@ class MainFragment : Fragment() {
 
         binding.floatingActionButton2.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.action_mainFragment_to_noteFragment)
-
         }
 
         val adapter = NoteAdapter()

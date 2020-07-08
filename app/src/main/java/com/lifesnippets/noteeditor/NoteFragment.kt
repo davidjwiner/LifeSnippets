@@ -7,19 +7,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.jetbrains.handson.mpp.lifesnippets.R
 import com.jetbrains.handson.mpp.lifesnippets.databinding.NoteFragmentBinding
 
 class NoteFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = NoteFragment()
+    private val viewModel: NoteViewModel by viewModels {
+        val existingNote = this.arguments?.containsKey("noteId")
+        if (existingNote != null) {
+            val noteId: Long =  this.arguments!!.get("noteId") as Long
+            return@viewModels NoteViewModelFactory(activity!!.application, noteId)
+        } else {
+            return@viewModels NoteViewModelFactory(activity!!.application, -1)
+        }
     }
-
-    private lateinit var viewModel: NoteViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,13 +31,11 @@ class NoteFragment : Fragment() {
     ): View? {
         val binding: NoteFragmentBinding = DataBindingUtil.inflate(
             inflater, R.layout.note_fragment, container, false)
-        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
         binding.lifecycleOwner = this.viewLifecycleOwner
         viewModel.eventNoteSubmitted.observe(viewLifecycleOwner, Observer<Boolean> { hasSubmitted ->
             noteSubmitted()
         })
         binding.noteViewModel = viewModel
-
         return binding.root
     }
 
