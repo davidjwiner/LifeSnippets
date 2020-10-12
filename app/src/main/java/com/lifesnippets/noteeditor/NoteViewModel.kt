@@ -12,8 +12,9 @@ import com.lifesnippets.data.NoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
-//class NoteViewModel (application: Application, private val state: SavedStateHandle) : AndroidViewModel(application) {
 class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
     private val repository: NoteRepository
 
@@ -34,7 +35,7 @@ class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
                 if (noteId > 0) {
                     _note.postValue(repository.get(noteId))
                 } else {
-                    _note.postValue(Note(noteText = "")) // key is auto-generated
+                    _note.postValue(Note(noteText = "", noteDate = Date())) // key is auto-generated
                 }
             }
         }
@@ -53,5 +54,17 @@ class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
 
     private fun insert(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(note)
+    }
+
+    fun getDateFormatted() : String {
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        note.value?.let {
+            return@getDateFormatted formatter.format(it.noteDate)
+        }
+        return formatter.format(Date())
+    }
+
+    fun updateDate(epochDate: Long) {
+        note.value?.noteDate = Date(epochDate)
     }
 }

@@ -10,10 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.jetbrains.handson.mpp.lifesnippets.R
 import com.jetbrains.handson.mpp.lifesnippets.databinding.NoteFragmentBinding
 
 class NoteFragment : Fragment() {
+
+    var datePicker: MaterialDatePicker<Long>
+
+    init {
+        val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
+        datePicker = datePickerBuilder.build()
+    }
 
     private val viewModel: NoteViewModel by viewModels {
         val existingNote = this.arguments?.containsKey("noteId")
@@ -36,9 +44,16 @@ class NoteFragment : Fragment() {
             noteSubmitted()
         })
         binding.noteViewModel = viewModel
+        binding.dateButton.setOnClickListener {
+            datePicker.show(activity!!.supportFragmentManager, datePicker.toString())
+        }
+        datePicker.addOnPositiveButtonClickListener {
+            viewModel.updateDate(it)
+            view?.invalidate()
+        }
         return binding.root
-    }
 
+    }
     private fun noteSubmitted() {
         Toast.makeText(
             this.context,
@@ -46,6 +61,10 @@ class NoteFragment : Fragment() {
             Toast.LENGTH_SHORT
         ).show()
         Navigation.findNavController(this.view!!).navigate(R.id.action_noteFragment_to_mainFragment)
+    }
+
+    fun onDateSelected() {
+
     }
 
 }

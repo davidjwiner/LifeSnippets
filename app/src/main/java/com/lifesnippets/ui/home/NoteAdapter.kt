@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.github.vipulasri.timelineview.TimelineView
 import com.jetbrains.handson.mpp.lifesnippets.R
 import com.lifesnippets.data.Note
+import java.text.DateFormat
 
 class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
@@ -29,12 +31,20 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
-    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    override fun getItemViewType(position: Int): Int {
+        return TimelineView.getTimeLineViewType(position, itemCount)
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val noteText: TextView = itemView.findViewById(R.id.note_string)
+        private val noteDate: TextView = itemView.findViewById(R.id.date_text)
         private val editImage: ImageView = itemView.findViewById(R.id.edit_image)
 
         fun bind(item: Note) {
             noteText.text = item.noteText
+            noteDate.text = DateFormat.getDateInstance().format(item.noteDate)
             if (noteText.text.isNotEmpty()) {
                 editImage.setImageResource(R.drawable.pencil)
             }
@@ -49,7 +59,6 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val view = layoutInflater
                     .inflate(R.layout.list_item_note, parent, false)
-
                 return ViewHolder(view)
             }
         }

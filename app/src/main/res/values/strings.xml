@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Life Snippets</string>
+    <string name="choose_date">Choose date</string>
 </resources>
