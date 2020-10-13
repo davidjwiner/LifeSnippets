@@ -2,17 +2,14 @@ package com.lifesnippets.noteeditor
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.lifesnippets.data.Note
 import com.lifesnippets.data.NoteDatabase
 import com.lifesnippets.data.NoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 import java.util.*
 
 class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
@@ -29,7 +26,6 @@ class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
     init {
         val noteDao = NoteDatabase.getDatabase(application).noteDao()
         repository = NoteRepository(noteDao)
-
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (noteId > 0) {
@@ -56,15 +52,18 @@ class NoteViewModel(application: Application, noteId: Long = -1) : ViewModel() {
         repository.insert(note)
     }
 
-    fun getDateFormatted() : String {
-        val formatter = SimpleDateFormat("dd/MM/yyyy")
-        note.value?.let {
-            return@getDateFormatted formatter.format(it.noteDate)
+    val dateFormatted : LiveData<String> = Transformations.map(_note) {
+        val formatter = DateFormat.getDateInstance()
+        formatter.timeZone = TimeZone.getTimeZone("UTC")
+        it?.let {
+            formatter.format(it.noteDate)
         }
-        return formatter.format(Date())
     }
 
+    // TODO: figure out a better way to do this
     fun updateDate(epochDate: Long) {
-        note.value?.noteDate = Date(epochDate)
+        _note.value?.let {
+            _note.value = Note(it.noteId, it.noteText, Date(epochDate))
+        }
     }
 }

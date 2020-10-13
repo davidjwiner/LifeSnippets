@@ -12,6 +12,7 @@ import com.github.vipulasri.timelineview.TimelineView
 import com.jetbrains.handson.mpp.lifesnippets.R
 import com.lifesnippets.data.Note
 import java.text.DateFormat
+import java.util.*
 
 class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
@@ -44,7 +45,9 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
         fun bind(item: Note) {
             noteText.text = item.noteText
-            noteDate.text = DateFormat.getDateInstance().format(item.noteDate)
+            val formatter = DateFormat.getDateInstance()
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            noteDate.text = formatter.format(item.noteDate)
             if (noteText.text.isNotEmpty()) {
                 editImage.setImageResource(R.drawable.pencil)
             }

@@ -58,7 +58,6 @@
                 android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:ems="10"
-                android:inputType="date"
                 android:text="@{noteViewModel.dateFormatted}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
